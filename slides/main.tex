@@ -16,7 +16,7 @@
 \usepackage{amsmath, bm}
 
 \usepackage{comment}
-
+\usepackage{autonum}
 \usepackage{tabularx}
 
 \usepackage{tikz}
@@ -165,48 +165,48 @@
 \titlepage
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
-\begin{frame}{Цель исследования}
+\begin{frame}{Задача построения модели глубокого обучения}
 \begin{block}{Цель работы}
-Предложить метод построения критерия качества модели, учитывающего его точность, сложность и устойчивость.
+Предложить метод построения критерия качества модели, учитывающего ее точность, сложность и устойчивость. Построить модель, удовлетворяющую этому критерию. 
 \end{block}
 \begin{block}{Проблема}
 Нейронные сети, обладающие большой точностью, обычно демонстрируют высокую сложность и низкую устойчивость.
 \end{block}
 \begin{block}{Метод решения}
-Построить функцию ошибки, включающую аддитивную регуляризацию
+Построить функцию ошибки, включающую аддитивную регуляризацию.
 \end{block}
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Постановка задачи}
 
 Задана выборка, конечное множество пар  $$
-(\mathbf{x},y) \in D,\quad \mathbf{x} \in \mathbb{R}^{n},\quad y\in \mathbb{R}
+(\mathbf{x},y) \in D,\quad \mathbf{x} \in \mathbb{R}^{n},\quad y\in \mathbb{R}.
 $$
 Структура модели имеет следующий вид
 \begin{equation}
-f = \sigma_k\circ\underset{1\times1}{\wm_k^\mathsf{T}\sigmab_{k-1}}\circ\w_{k-1}\sigmab_{k-2}\circ\dots\circ\underset{n_2 \times 1}{\w_2\sigmab_1}\circ\underset{n_1 \times n}{\w_1}\underset{n \times 1}{\x}
+f = \sigma_k\circ\underset{1\times1}{\wm_k^\mathsf{T}\sigmab_{k-1}}\circ\w_{k-1}\sigmab_{k-2}\circ\dots\circ\underset{n_2 \times 1}{\w_2\sigmab_1}\circ\underset{n_1 \times n}{\w_1}\underset{n \times 1}{\x}.
 \end{equation}
 Функция ошибки имеет вид
-\begin{equation}\label{eq:error_function}
+\begin{equation}
 L = \lambda_xE_{\mathbf{x}} + \lambda_yE_{\y} + \lambda_1\mathcal{R}_1+\dots+\lambda_k\mathcal{R}_k = \lambda_xE_x + \lambda_yE_y + \sum\limits_{i = 1}^k\mathbb{\lambda}_i \mathcal{R}_i(\mathbf{W}),
 \end{equation}
-где $\mathcal{R}_i = \mathcal{R}(\mathbf{W}) = (\rk_1(\mathbf{W}), \cdots , \rk_r(\mathbf{W}))^{\T}$~---вектор, состоящий из значений регуляризаторов $i$-ого слоя.
+где $\mathcal{R}_i = \mathcal{R}(\mathbf{W}) = [\rk_1(\mathbf{W}), \cdots , \rk_r(\mathbf{W})]^{\T}$~---вектор, состоящий из значений регуляризаторов $i$-ого слоя.
 \\ Требуется решить задачу
 \begin{equation}\label{eq:criterion_argmin}
 \begin{array}{r@{}l}
-\wm= \arg \min L(f| \mathbf{\lambda})\\
-\mathbf{\lambda }= \argmin L(f| \wm) \\
+\wm= \arg \min L(f| \mathbf{\lambda}),\\
+\mathbf{\lambda }= \argmin L(f| \wm), \\
 \end{array}
 \end{equation}
 при условии минимизации дисперсии параметров и сложности модели.
 \begin{equation}
-    \sum\limits_{i=1}^k \frac{1}{|W_k|}W_k^\mathsf{T}W_k \rightarrow \min \quad \quad
-    \sum\limits_{i=1}^k |W_k| \rightarrow \min
+    \sum\limits_{i=1}^k \frac{1}{|W_k|}W_k^\mathsf{T}W_k \rightarrow \min, \quad \quad
+    \sum\limits_{i=1}^k |W_k| \rightarrow \min.
 \end{equation}
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 %----------------------------------------------------------------------------------------------------------
-\begin{frame}{Решение}
+\begin{frame}{Использование аддитивной регуляризации}
 \begin{block}{Задание критерия качества}
     Вводится понятие сложности, устойчивости и точности модели.
 \end{block}
@@ -219,51 +219,66 @@ L = \lambda_xE_{\mathbf{x}} + \lambda_yE_{\y} + \lambda_1\mathcal{R}_1+\dots+\la
 
 
 \end{frame}
-\begin{frame}{Критерий качества}
+\begin{frame}{Критерии качества модели}
 \begin{block}{Свойства модели}
     \begin{itemize}
     \item
-    Сложность~---мера множества допустимых значений параметров модели.
+    Сложность~---мера множества допустимых значений параметров модели
+    $$
+    \sum\limits_{i=1}^k |W_k|.$$
     \item
-    Устойчивость~--- дисперсия ошибки и параметров.
+    Устойчивость~--- дисперсия ошибки и параметров
+    $$
+    \sum\limits_{i=1}^k \frac{1}{|W_k|}W_k^\mathsf{T}W_k.$$ 
     \item 
-    Точность~---качество аппроксимации, выражаемое через значение функции ошибки.
+    Точность~---качество аппроксимации, выражаемое через значение функции ошибки $$\sum_{i = 1} ^ l (f(x_i) - y_i)^2. $$
 \end{itemize}
 \end{block}
 
 
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
-\begin{frame}{Регуляризаторы}
+\begin{frame}{Каталог регуляризаторов аддитивной функции ошибки}
 \begin{table}[h!]
 \begin{center}
 \begin{tabular}{|c|c|}
 \hline
    Роль в аддитивной регуляризации & Тип регуляризатора  \\
   \hline
-  Ошибка выхода нейронной сети  & $||\mathbf{y} - f(\w)||^2_2 $   \\
+  \begin{flushleft}
+  Ошибка выхода нейронной сети
+  \end{flushleft} & $||\mathbf{y} - f(\w)||^2_2 $   \\
   \hline
-  Ошибка восстановления на каждом слое & $||\xb-\mathbf{r}(\xb)||^2_2$ \\
+  \begin{flushleft}
+  Ошибка восстановления на каждом слое \end{flushleft} & $||\xb-\mathbf{r}(\xb)||^2_2$ \\
   \hline
-  $L_1$ и $L_2$ регуляризация & $||\wm-\wm_0||_1$, $||\wm-\wm_0||^2_2$ \\
-  \hline
+  \begin{flushleft}
+  $L_1$ и $L_2$ регуляризация \end{flushleft} & $||\wm-\wm_0||_1$, $||\wm-\wm_0||^2_2$ \\
+  \hline 
   \begin{tabular}{c}
-       Штраф за отличие матрицы одного слоя \\
+  \begin{flushleft}
+       Штраф за отличие матрицы одного слоя\end{flushleft} \\ \begin{flushleft}
        от тождественного преобразования
+       \end{flushleft}
   \end{tabular}
+
    & $||\w-\mathbf{I}||$  \\
   \hline
+  \begin{flushleft}
   \begin{tabular}{c}
-       Штраф за отличие матрицы одного слоя \\
+  
+       Штраф за отличие матрицы одного слоя\\
        от метода главных компонент
+       
   \end{tabular}
+  \end{flushleft}
   & $||\w\w^T-\mathbf{I}||$ \\
   \hline
-  Тихоновская регуляризация & 
+  \begin{flushleft}
+  Тихоновская регуляризация \end{flushleft} & 
   $\|\mathbf{T}\w\|$  \\
   \hline
 \end{tabular}
-\caption{Каталог регуляризаторов аддитивной функции ошибки}
 \end{center}
 \end{table}
 \end{frame}
@@ -271,20 +286,26 @@ L = \lambda_xE_{\mathbf{x}} + \lambda_yE_{\y} + \lambda_1\mathcal{R}_1+\dots+\la
 
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Пример расписания регуляризации}
+\begin{center}
 \begin{figure}[h!]
 \center{\includegraphics[width=\linewidth]{Opt_Schedule_1.png}}
-\caption{Экспертное задание расписания оптимизации, вар 1}
+
 \label{fig:opt schedule 1}
 \end{figure}
+Экспертное задание расписания оптимизации, первое расписание.
+\end{center}
 \end{frame}
 
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Пример расписания регуляризации}
+\begin{center}
 \begin{figure}[h!]
 \center{\includegraphics[width=\linewidth]{Opt_Schedule_2.png}}
-\caption{Экспертное задание расписания оптимизации, вар 2}
+
 \label{fig:opt schedule 2}
 \end{figure}
+Экспертное задание расписания оптимизации, второе расписание.
+\end{center}
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 
@@ -295,49 +316,91 @@ L = \lambda_xE_{\mathbf{x}} + \lambda_yE_{\y} + \lambda_1\mathcal{R}_1+\dots+\la
         \item Продемонстрировать эффект от использования аддитивной регуляризации
     \end{itemize}
 \end{block}
+\begin{center}
+   Описание выборок для экспериментов.
+\end{center}
+\begin{table}[!htbp]
+\captionsetup{justification=raggedright,singlelinecheck=false}
+\label{table1}
+
+\footnotesize
+\begin{center}
+\centering
+\begin{tabular}{ | c | c | c |c | c | c | c | }
+\hline
+Выборка $\mathfrak{D}$ & Размер train  & Размер val  & Размер test& Объекты & Признаки\\
+\hline
+Credit Card & 18000 & 6000& 6000 & 30000 & 35  \\
+\hline
+Protein & 27438 & 9146 & 9146 & 45730 & 9 \\
+\hline
+Airbnb & 6298 & 2100 & 2100 & 10498 & 16 \\
+\hline
+Wine quality & 2938 & 980 & 980 & 4898 & 11 \\
+\hline
+Synthetic & 1200 & 400 & 400 & 2000 & 30 \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
 
 \end{frame}
 
 
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Дисперсия параметров во время обучения}
+\begin{center}
+Конфигурация : 4 слоя сети, 1 слой автоенкодера, 7 нейронов на каждый слой.
 \begin{figure}[h!]
-\center{\includegraphics[width=\linewidth]{green_above.png}}
-\caption{Обычное поведение дисперсии параметров : в регуляризованных моделях она меньше.}
+\center{\includegraphics[width=\linewidth]{reg_under.png}}
 \label{fig:opt schedule 2}
 \end{figure}
+За счет регуляризации модель становится более устойчивой, поэтому дисперсия параметров у регуляризованных решений меньше.
+\end{center}
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Дисперсия параметров во время обучения}
+\begin{center}
+Конфигурация : 6 слоев сети, 1 слой автоенкодера, 9 нейронов на каждый слой.
 \begin{figure}[h!]
-\center{\includegraphics[width=\linewidth]{red_low.png}}
-\caption{Первое расписание оптимизации демонстрирует большую эффективность}
+\center{\includegraphics[width=\linewidth]{red_under.png}}
+
 \label{fig:opt schedule 2}
 \end{figure}
+Первое расписание оптимизации демонстрирует большую эффективность, чем второе.
+\end{center}
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Дисперсия параметров во время обучения}
+\begin{center}
+Конфигурация : 6 слоев сети, 4 слоя автоенкодера, 8 нейронов на каждый слой.
 \begin{figure}[h!]
 \center{\includegraphics[width=\linewidth]{blue_under.png}}
-\caption{Первое расписание оптимизации демонстрирует большую эффективность}
 \label{fig:opt schedule 2}
 \end{figure}
+Второе расписание оптимизации демонстрирует большую эффективность, чем первое.
+\end{center}
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Зависимость точности от сложности}
+\begin{center}
 \begin{figure}[h!]
-\center{\includegraphics[width=\linewidth]{complexity.png}}
-\caption{Зависимость между сложностью и точностью для разных расписаний оптимизации}
+\center{\includegraphics[width=\linewidth]{new_complexity.png}}
+
 \label{fig:opt schedule 2}
 \end{figure}
+Зависимость между сложностью и точностью для разных расписаний оптимизации.
+\end{center}
 \end{frame}
 %----------------------------------------------------------------------------------------------------------
 \begin{frame}{Зависимость между устойчивостью и сложностью}
+\begin{center}
 \begin{figure}[h!]
 \center{\includegraphics[width=\linewidth]{stability.png}}
-\caption{Зависимость между сложностью и устойчивостью для разных расписаний оптимизации}
 \label{fig:opt schedule 2}
 \end{figure}
+Зависимость между сложностью и устойчивостью для разных расписаний оптимизации.
+\end{center}
 \end{frame}
 
 %----------------------------------------------------------------------------------------------------------
@@ -351,25 +414,25 @@ L = \lambda_xE_{\mathbf{x}} + \lambda_yE_{\y} + \lambda_1\mathcal{R}_1+\dots+\la
         \item 
         Это предварительные результаты, по окончательным будет построена таблица с сравнением точности, сложности и устойчивости по разным выборкам и конфигурациям модели.
     \end{enumerate}
-Список литературы:
-\begin{thebibliography}{1}
+% Список литературы:
+% \begin{thebibliography}{1}
 			
-			\bibitem{1}
-			\BibAuthor{Tikhonov, Andrey N and Arsenin, Vasiliy Y}
-			\BibTitle{Solutions of ill-posed problems}~//
-			\BibJournal{New York, 1977}
+% 			\bibitem{1}
+% 			\BibAuthor{Tikhonov, Andrey N and Arsenin, Vasiliy Y}
+% 			\BibTitle{Solutions of ill-posed problems}~//
+% 			\BibJournal{New York, 1977}
 			
-			\bibitem{journals/corr/HaDL16}
-			\BibAuthor{Svens{\'e}n, Markus and Bishop, Christopher M}
-			\BibTitle{Pattern Recognition and Machine Learning}
+% 			\bibitem{journals/corr/HaDL16}
+% 			\BibAuthor{Svens{\'e}n, Markus and Bishop, Christopher M}
+% 			\BibTitle{Pattern Recognition and Machine Learning}
 			
-			\bibitem{author09anyscience}
-			\BibAuthor{Tibshirani, Robert}
-			\BibTitle{Regression shrinkage and selection via the lasso}~//
-			\BibJournal{Journal of the Royal Statistical Society: Series B (Methodological), 1966}
+% 			\bibitem{author09anyscience}
+% 			\BibAuthor{Tibshirani, Robert}
+% 			\BibTitle{Regression shrinkage and selection via the lasso}~//
+% 			\BibJournal{Journal of the Royal Statistical Society: Series B (Methodological), 1966}
 			
 			
-		\end{thebibliography}
+% 		\end{thebibliography}
 
 \end{frame}
 \end{document} 
